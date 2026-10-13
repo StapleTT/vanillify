@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <Version>0.2.0</Version>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <Import Project="Vanillify.csproj.user" Condition="Exists('Vanillify.csproj.user')" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.3" PrivateAssets="all" />
+    <Reference Include="IPA.Loader" HintPath="$(BeatSaberDir)/Beat Saber_Data/Managed/IPA.Loader.dll" Private="false" />
+    <Reference Include="SongCore" HintPath="$(BeatSaberDir)/Plugins/SongCore.dll" Private="false" />
+    <Reference Include="BS_Utils" HintPath="$(BeatSaberDir)/Plugins/BS_Utils.dll" Private="false" />
+    <Reference Include="BSML" HintPath="$(BeatSaberDir)/Plugins/BSML.dll" Private="false" />
+    <EmbeddedResource Include="manifest.json" LogicalName="Vanillify.manifest.json" />
+    <EmbeddedResource Include="Settings.bsml" LogicalName="Vanillify.Settings.bsml" />
+  </ItemGroup>
+  <Target Name="CheckGameReferences" BeforeTargets="ResolveReferences">
+    <Error Condition="!Exists('$(BeatSaberDir)/Beat Saber_Data/Managed/IPA.Loader.dll')" Text="Set BeatSaberDir to your modded Beat Saber 1.40.8 installation (IPA.Loader.dll is missing)." />
+    <Error Condition="!Exists('$(BeatSaberDir)/Plugins/SongCore.dll')" Text="Install SongCore for Beat Saber 1.40.8 before building." />
+    <Error Condition="!Exists('$(BeatSaberDir)/Plugins/BS_Utils.dll')" Text="Install BS Utils for Beat Saber 1.40.8 before building." />
+    <Error Condition="!Exists('$(BeatSaberDir)/Plugins/BSML.dll')" Text="Install BeatSaberMarkupLanguage for Beat Saber 1.40.8 before building." />
+  </Target>
+</Project>
