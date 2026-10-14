@@ -94,13 +94,3 @@ namespace SongCore
         public static void DeregisterCapability(string capability) => Entries.Remove(capability);
     }
 }
-
-namespace BS_Utils.Gameplay
-{
-    public static class ScoreSubmission
-    {
-        public static readonly HashSet<string> Owners = [];
-        public static void ProlongedDisableSubmission(string mod) => Owners.Add(mod);
-        public static void RemoveProlongedDisable(string mod) => Owners.Remove(mod);
-    }
-}

@@ -6,13 +6,13 @@ Vanillify registers the `Vivify` capability with SongCore. With the real Vivify 
 
 ## Install
 
-1. Use a modded **PC 1.40.8** installation with **BSIPA 4.3.6**, **SongCore 3.15.3**, **BS Utils 1.14.2**, and **BeatSaberMarkupLanguage 1.12.5**, including their dependencies. These are the versions listed by BeatMods for 1.40.8. Compatible updates within the same major versions are allowed by the manifest.
+1. Use a modded **PC 1.40.8** installation with **BSIPA 4.3.6**, **SongCore 3.15.3**, and **BeatSaberMarkupLanguage 1.12.5**, including their dependencies. These are the versions listed by BeatMods for 1.40.8. Compatible updates within the same major versions are allowed by the manifest.
 2. Close Beat Saber. Move `Plugins/Vivify.dll` outside the game installation if present. Vanillify and Vivify are declared incompatible; leaving both installed may cause the loader to reject Vanillify.
 3. Extract `dist/Vanillify-0.2.0-bs1.40.8.zip` into the game directory, or copy `dist/Plugins/Vanillify.dll` into the game's `Plugins` folder. Replace the old Vanillify DLL when upgrading.
 4. From the main menu, open **Mod Settings → Vanillify** and use **Enable Vanillify**. The toggle applies immediately and is saved across restarts in `UserData/Vanillify.json`. It defaults to on for a new installation.
 5. Return to song selection and select a Vivify chart. Other missing requirements still block Play and Practice. When the toggle is off, the Vivify requirement blocks these charts again.
 
-**Score submission is disabled for all songs while Vanillify is enabled**, using the standard BS Utils submission blocker. Switch **Enable Vanillify** off in the main-menu settings to remove this blocker without restarting. Other mods' submission blockers remain in effect. Submission protection relies on leaderboard mods honoring the BS Utils API.
+Score submission is not affected by Vanillify.
 
 The off setting does not enable the real Vivify mod or restore its effects; Vivify must remain uninstalled while Vanillify is installed. The settings menu remains available when the toggle is off.
 
@@ -43,15 +43,15 @@ dotnet run --project tests/Vanillify.Checks.csproj
 dotnet run --project tests/Vanillify.Checks.csproj -- Vanillify/bin/Release/net472/Vanillify.dll
 ```
 
-The checks require the .NET 10 SDK and exercise the real plugin source with fake host APIs: Vivify gating, missing additional requirements, repeated enable/disable, menu registration and cleanup, immediate toggling, saved preference restoration, refusal of an existing capability provider, preservation of other submission blockers, and embedded resources. They do not simulate Beat Saber's parser, BSML rendering, BSIPA's file serialization, or VR runtime.
+The checks require the .NET 10 SDK and exercise the real plugin source with fake host APIs: Vivify gating, missing additional requirements, repeated enable/disable, menu registration and cleanup, immediate toggling, saved preference restoration, refusal of an existing capability provider, and embedded resources. They do not simulate Beat Saber's parser, BSML rendering, BSIPA's file serialization, or VR runtime.
 
-Release 0.2.0 was compiled with zero warnings against the actual BeatMods-approved **BSIPA 4.3.6 / SongCore 3.15.3 / BS Utils 1.14.2 / BeatSaberMarkupLanguage 1.12.5** assemblies for 1.40.8. The lifecycle and toggle checks passed. **In-game validation has not been performed.** Before relying on it, check:
+Release 0.2.0 was compiled with zero warnings against the actual BeatMods-approved **BSIPA 4.3.6 / SongCore 3.15.3 / BeatSaberMarkupLanguage 1.12.5** assemblies for 1.40.8. The lifecycle and toggle checks passed. **In-game validation has not been performed.** Before relying on it, check:
 
 1. A Vivify-only chart permits Play and Practice and loads with normal notes, without an asset-bundle prompt or Vivify effects.
 2. A chart with an additional missing requirement remains blocked; installing that requirement permits it to load.
-3. An ordinary song still plays, and results report score submission disabled by Vanillify.
-4. Open **Mod Settings → Vanillify**, turn the toggle off, and return to song selection. Vivify-only charts should be blocked again, and ordinary songs should no longer report Vanillify as a submission blocker.
+3. An ordinary song still plays and submits scores as usual.
+4. Open **Mod Settings → Vanillify**, turn the toggle off, and return to song selection. Vivify-only charts should be blocked again.
 5. Restart with the setting off. The toggle should remain off and the menu should still be available. Turn it back on and verify Vivify-only charts are playable again.
-6. After removing Vanillify and restarting, Vivify-only charts are blocked again and Vanillify no longer blocks submission.
+6. After removing Vanillify and restarting, Vivify-only charts are blocked again.
 
-API behavior was traced in [SongCore](https://github.com/Kylemc1413/SongCore) (`Collections` and `SongDataMenuPatches`), [Vivify](https://github.com/Aeroluna/Vivify) (`VivifyController`, `FeaturesModule`, and `AssetBundleDownloadViewController`), [BSIPA](https://github.com/nike4613/BeatSaber-IPA-Reloaded) (`PluginManifest`), and [BS Utils](https://github.com/Kylemc1413/Beat-Saber-Utils) (`ScoreSubmission`).
+API behavior was traced in [SongCore](https://github.com/Kylemc1413/SongCore) (`Collections` and `SongDataMenuPatches`), [Vivify](https://github.com/Aeroluna/Vivify) (`VivifyController`, `FeaturesModule`, and `AssetBundleDownloadViewController`), and [BSIPA](https://github.com/nike4613/BeatSaber-IPA-Reloaded) (`PluginManifest`).

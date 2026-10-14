@@ -2,7 +2,6 @@ using System;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Settings;
 using BeatSaberMarkupLanguage.Util;
-using BS_Utils.Gameplay;
 using IPA;
 using IPA.Config.Stores;
 using IPA.Logging;
@@ -14,7 +13,6 @@ namespace Vanillify;
 public sealed class Plugin
 {
     private const string Capability = "Vivify";
-    private const string SubmissionOwner = "Vanillify";
     private readonly Logger _logger;
     private readonly PluginConfig _config;
     private BSMLSettings? _settings;
@@ -68,7 +66,6 @@ public sealed class Plugin
         if (!enabled)
         {
             Collections.DeregisterCapability(Capability);
-            ScoreSubmission.RemoveProlongedDisable(SubmissionOwner);
             _enabled = false;
             _logger.Info("Vivify requirement bypass disabled.");
             return;
@@ -78,10 +75,9 @@ public sealed class Plugin
         if (Collections.capabilities.Contains(Capability))
             throw new InvalidOperationException("Remove Vivify or another Vivify capability provider before enabling Vanillify.");
 
-        ScoreSubmission.ProlongedDisableSubmission(SubmissionOwner);
         Collections.RegisterCapability(Capability);
         _enabled = true;
-        _logger.Info("Vivify requirement bypass enabled. Vivify effects are absent; score submission is disabled for all songs.");
+        _logger.Info("Vivify requirement bypass enabled. Vivify effects are absent.");
     }
 
     [OnDisable]

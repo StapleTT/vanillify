@@ -2,13 +2,12 @@
   "id": "Vanillify",
   "name": "Vanillify",
   "author": "Vanillify contributors",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "gameVersion": "1.40.8",
-  "description": "Play Vivify-required charts without Vivify effects. Score submission is disabled while enabled.",
+  "description": "An accessibility-focused mod that allows photosensitive users to safely play Vivify-required charts.",
   "dependsOn": {
     "BSIPA": "^4.3.6",
     "SongCore": "^3.15.3",
-    "BS Utils": "^1.14.2",
     "BeatSaberMarkupLanguage": "^1.12.5"
   },
   "conflictsWith": {

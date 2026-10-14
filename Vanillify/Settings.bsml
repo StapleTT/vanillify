@@ -1,6 +1,5 @@
 <settings-container>
   <bool-setting text="Enable Vanillify" value="enabled" apply-on-change="true"
                 hover-hint="Allow Vivify charts without Vivify effects. Applies immediately and is saved for next launch." />
-  <text text="While enabled, score submission is disabled for all songs." font-size="3" />
   <text text="Other chart requirements still apply. Keep Vivify uninstalled." font-size="3" />
 </settings-container>

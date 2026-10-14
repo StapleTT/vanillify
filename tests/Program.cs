@@ -6,7 +6,6 @@ using System.Text.Json;
 using System.Xml.Linq;
 using BeatSaberMarkupLanguage.Settings;
 using BeatSaberMarkupLanguage.Util;
-using BS_Utils.Gameplay;
 using IPA.Logging;
 using SongCore;
 using Vanillify;
@@ -21,7 +20,6 @@ static bool CanPlay(params string[] requirements) => requirements.All(Collection
 var config = new IPA.Config.Config();
 var plugin = new Plugin(new Logger(), config);
 Collections.RegisterCapability("Mapping Extensions");
-ScoreSubmission.ProlongedDisableSubmission("OtherMod");
 plugin.OnDisable();
 Check(!CanPlay("Vivify"), "Disable before enable must not grant capability.");
 plugin.OnEnable();
@@ -33,14 +31,12 @@ Check(CanPlay(), "Ordinary chart should remain playable.");
 Check(CanPlay("Vivify", "Mapping Extensions"), "Installed mechanics must remain available.");
 Check(!CanPlay("Vivify", "Noodle Extensions"), "Missing mechanics must still block Play.");
 Check(Collections.capabilities.Count(c => c == "Vivify") == 1, "Enable must be idempotent.");
-Check(ScoreSubmission.Owners.Contains("Vanillify"), "Bypassed gameplay must disable submission.");
 plugin.OnDisable();
 plugin.OnDisable();
 Check(!BSMLSettings.Instance.Hosts.Contains(plugin), "Unloading must remove the settings menu.");
 Check(config.Store.Enabled, "Unloading must preserve the saved preference.");
 Check(!CanPlay("Vivify"), "Disable must restore requirement enforcement.");
 Check(CanPlay("Mapping Extensions"), "Disable must preserve other capabilities.");
-Check(ScoreSubmission.Owners.SetEquals(["OtherMod"]), "Disable must preserve other submission blockers.");
 plugin.OnEnable();
 Check(BSMLSettings.Instance.Hosts.Contains(plugin), "Loading in an existing menu must register settings.");
 plugin.OnDisable();
@@ -53,7 +49,6 @@ catch (InvalidOperationException) { refused = true; }
 Check(refused, "An existing capability provider must be refused.");
 plugin.OnDisable();
 Check(CanPlay("Vivify"), "A refused enable must not remove another provider's capability.");
-Check(!ScoreSubmission.Owners.Contains("Vanillify"), "A refused enable must not claim a submission blocker.");
 Collections.DeregisterCapability("Vivify");
 
 plugin.OnEnable();
@@ -62,11 +57,9 @@ plugin.Enabled = false;
 Check(!CanPlay("Vivify"), "The menu toggle must immediately restore requirement enforcement.");
 Check(!config.Store.Enabled, "The menu toggle must save the disabled preference.");
 Check(BSMLSettings.Instance.Hosts.Contains(plugin), "Turning mode off must keep its menu available.");
-Check(ScoreSubmission.Owners.SetEquals(["OtherMod"]), "Turning mode off must only remove Vanillify's submission blocker.");
 plugin.Enabled = true;
 plugin.Enabled = true;
 Check(CanPlay("Vivify") && config.Store.Enabled, "Turning mode on must apply and save the preference.");
-Check(ScoreSubmission.Owners.Contains("Vanillify"), "Turning mode on must block submission.");
 Check(!CanPlay("Vivify", "Noodle Extensions"), "The menu toggle must preserve other missing requirements.");
 MainMenuAwaiter.LeaveMenu();
 MainMenuAwaiter.EnterMenu();
@@ -97,7 +90,6 @@ Check(typeof(Plugin).GetProperty(nameof(Plugin.Enabled))!.GetCustomAttribute<Bea
 using var manifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "manifest.json")));
 Check(manifest.RootElement.GetProperty("gameVersion").GetString() == "1.40.8", "Manifest must target 1.40.8.");
 Check(manifest.RootElement.GetProperty("conflictsWith").GetProperty("Vivify").GetString() == "*", "Real Vivify must conflict.");
-Check(manifest.RootElement.GetProperty("dependsOn").GetProperty("BS Utils").GetString() == "^1.14.2", "Submission API dependency must be declared.");
 Check(manifest.RootElement.GetProperty("dependsOn").GetProperty("BeatSaberMarkupLanguage").GetString() == "^1.12.5", "The menu dependency must be declared.");
 if (args.Length == 1)
 {
